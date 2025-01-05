@@ -16,6 +16,14 @@ class Mon(pygame.sprite.Sprite):
 
 		self.rect = self.image.get_rect()
 		self.rect.topleft = [pos_x,pos_y]
+  
+		#Stats!
+		self.attack = 0
+		self.hp = 0
+  
+		#Health
+		self.care_mistakes = 0
+		self.hunger = 0
 
 	def update(self,speed,anim_id):
 		if self.animation == True:
@@ -43,28 +51,49 @@ class Mon(pygame.sprite.Sprite):
 			self.idle_sprites.append(self.current_mon.get_sprite(i*16,0,16,16))
 		return 0
 	
-	def hatch(self,):
+	def hatch(self,id):
 		self.idle_sprites = []
+		self.idle_sprites.append(self.current_mon.get_sprite(1*16,0,16,16))
 		self.idle_sprites.append(self.current_mon.get_sprite(2*16,0,16,16))
-		self.idle_sprites.append(self.current_mon.get_sprite(3*16,0,16,16))
 
 		return 0
+
 	def idle(self):
 		self.animation = True
-	
-	def moving(self):
-		return 0
 
 
 class SpriteSheet():
-	def __init__(self, file):
-		self.sheet = pygame.image.load(file)
-	
-	def get_sprite(self, x, y, w, h):
-		sprite = pygame.Surface([w,h])
-		sprite.blit(self.sheet, (0,0), (x,y,w,h))
-		sprite.set_alpha
-		return sprite
+    def __init__(self, file):
+        self.sheet = pygame.image.load(file).convert_alpha()
+    
+    def get_sprite(self, x, y, w, h, scale=1):
+        # Crear superficie con canal alpha
+        sprite = pygame.Surface([w, h], pygame.SRCALPHA)
+        sprite.blit(self.sheet, (0, 0), (x, y, w, h))
+        
+        if scale != 1:
+            # Escalar el sprite al tamaño deseado
+            scaled_w = w * scale
+            scaled_h = h * scale
+            sprite = pygame.transform.scale(sprite, (scaled_w, scaled_h))
+        
+        return sprite
+
+class Menu(pygame.sprite.Sprite):
+	def __init__(self,id,i):
+		super().__init__()
+		self.materialize(id,i)
+		self.menu_sprites = []
+
+	def materialize(self,id,i):
+		self.menu_sprites = []
+		self.current_sprite = SpriteSheet(id)
+		self.menu_sprites.append(self.current_sprite.get_sprite(0,0,64,32))
+		self.current_sprite = 0
+		self.image = self.menu_sprites[self.current_sprite]
+
+		self.rect = self.image.get_rect()
+		self.rect.topleft = [i*64,0]
 
 
 ##Funciones
