@@ -2,7 +2,10 @@
 import pygame
 import random
 
-from Proyecto_final import mons
+from Proyecto_final import mons,screen_width
+
+
+
 
 class Mon(pygame.sprite.Sprite):
 	def __init__(self, pos_x, pos_y):
@@ -36,16 +39,20 @@ class Mon(pygame.sprite.Sprite):
 			if self.l_m != movement:
 				sprite_change(self)
 			if movement == 0 or self.rect.x <= 50:
-				self.rect.x += 1
+				self.rect.x += 2
 			elif movement == 1 or self.rect.x >= 200:
-				self.rect.x -= 1
+				self.rect.x -= 2
 			self.l_m = movement
+		if anim_id == 3:
+			entrance(self,1)
+		if anim_id == 4:
+			entrance(self,-1)
 		self.image = self.idle_sprites[int(self.current_sprite)]
 
 	def digitize(self,id):
 		self.idle_sprites = []
 		self.current_mon = SpriteSheet(mons[id])
-		self.l_m = 1
+		self.l_m = 1 #1derecha #0izquierda
 		fpa = 2
 		for i in range(fpa):
 			self.idle_sprites.append(self.current_mon.get_sprite(i*16,0,16,16))
@@ -100,3 +107,22 @@ class Menu(pygame.sprite.Sprite):
 def sprite_change(self):
 	for i in range(len(self.idle_sprites)):
 		self.idle_sprites[i] = pygame.transform.flip(self.idle_sprites[i],1,0)
+
+def draw_text(text,font,text_col,x,y):
+    img = font.render(text,True,text_col)
+    screen.blit(img,(x,y))
+    
+def evolution(player,state):
+	if pygame.time.get_ticks() in range(5000,9000):
+		player.hatch(1)
+		state = 2
+	if pygame.time.get_ticks() in range(9001,9100):
+		player.digitize(1)
+		state = 1
+	return state
+
+def entrance(self,dir):
+	if self.l_m > 1:
+		sprite_change(self)
+		self.l_m = 1
+	self.rect.x += 1*dir
