@@ -1,0 +1,7 @@
+name,stage,attack,hp,sleep,care_mistakes,n_trained,win_rate
+Popomon,Baby I,0,0,0,NA,NA,NA
+Nyaromon,Baby II,4,10,20,NA,NA,NA
+Elecmon,Child,16,10,21,NA,NA,NA
+Leomon,Adult,36,12,22,0,1,"range(75,100)"
+MadLeomon,Adult,70,12,22,0,2,"range(50,100)"
+Leomon (X-Antibody),Adult,46,12,22,1,0,"range(0,50)"
