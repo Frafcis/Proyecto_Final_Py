@@ -6,7 +6,7 @@ data_base = pd.read_csv('sleep_data_final.csv')
 
 pygame.font.init()
 
-
+from item_menu import *
 from sprites import *
 
 
@@ -101,6 +101,11 @@ if __name__ == "__main__":
 							print('Boton pulsado en '+ menu_items[i])
 						case 1:
 							print('Boton pulsado en '+ menu_items[i])
+							player.rect.x = 100
+							state = 5
+							nabo_sprite = pygame.sprite.Group()
+							nabo = Nabo(120,84)
+							nabo_sprite.add(nabo)
 						case 2:
 							if player.stage == 'Baby I' or state == 2:
 								break
@@ -117,6 +122,13 @@ if __name__ == "__main__":
 		game_surface.fill(BG_COLOR)
 		if bg:
 			game_surface.blit(bg, (0, 0))
+
+		#Training!
+		try:
+			nabo_sprite.draw(game_surface)
+			nabo.update(event)
+		except:
+			pass
 
 		#Battle!
 		try:

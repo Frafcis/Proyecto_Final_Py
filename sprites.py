@@ -78,6 +78,88 @@ class Mon(pygame.sprite.Sprite):
 	def idle(self):
 		self.animation = True
 
+class Nabo(pygame.sprite.Sprite):
+	def __init__(self, pos_x, pos_y):
+		super().__init__()
+		self.idle_sprites = []
+		self.animation = True
+		self.sprite_sheet = SpriteSheet('nabo.png')
+		self.digitize(0)
+
+		self.current_sprite = 0
+		self.image = self.idle_sprites[self.current_sprite]
+
+		self.rect = self.image.get_rect()
+		self.rect.topleft = [pos_x,pos_y]
+		
+		#stats
+		self.state = 0
+		self.prev_state = 0
+		self.progress = 0
+		self.max_progress = 100 + random.randint(0, 50)
+		self.force = 0
+		self.destroy_timer = 0
+
+	def update(self, event):
+		if self.state < 3:	# Si no fracaso
+			if self.progress < self.max_progress:	# Si nabo aun no termina
+				if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+					x, y = pygame.mouse.get_pos()
+					target = self.rect.collidepoint(x/3, y/3)
+					if target == True:
+						print(self.force)
+						self.force = self.force + 5
+						self.progress = self.progress + 5
+			
+				if self.force < 15:
+					self.state = 0
+				elif self.force < 30:
+					self.state = 1
+				elif self.force < 50:
+					self.state = 2
+				else:
+					self.state = 3	# Fracaso!
+
+				self.force = self.force - 1
+				if self.force < 0: self.force = 0
+
+			else:
+				self.state = 4
+		else:
+			self.destroy_timer = self.destroy_timer + 1
+
+		if self.destroy_timer >= 500:
+			self.destroy()	# Clickearon muy rapido (Fracaso!)
+
+		if self.state != self.prev_state:
+			self.digitize(self.state)
+		self.prev_state = self.state
+		
+		self.image = self.idle_sprites[int(self.current_sprite)]
+
+
+	def digitize(self, id):
+		self.idle_sprites = []
+
+		if id == 0:		# Idle, no hace nada
+			self.idle_sprites.append(self.sprite_sheet.get_sprite(0,0,16,32))
+		elif id == 1:	# Lento
+			fpa = 	4
+			for i in range(fpa):
+				self.idle_sprites.append(self.sprite_sheet.get_sprite((i//2%2)*16,0,16,32))
+		elif id == 2:	# Rapido
+			fpa = 	2
+			for i in range(fpa):
+				self.idle_sprites.append(self.sprite_sheet.get_sprite(i*16,0,16,32))
+		elif id == 3:		# Se rompió!
+			self.idle_sprites.append(self.sprite_sheet.get_sprite(32,0,16,32))
+		elif id == 4:		# Salió!
+			self.idle_sprites.append(self.sprite_sheet.get_sprite(48,0,16,32))
+			
+	
+	def idle(self):
+		self.animation = True
+
 
 class SpriteSheet():
 	def __init__(self, file):
