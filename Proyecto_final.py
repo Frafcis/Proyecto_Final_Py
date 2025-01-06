@@ -1,6 +1,10 @@
 import pygame, sys
 from pygame.locals import *
+
+import pandas as pd
+
 pygame.font.init()
+# data_base = pd.read_csv('SpeedDating.csv')
 
 from sprites import *
 mons = {0:'Lioll_Digitama.png', 1:'Popomon.png',
@@ -22,13 +26,13 @@ screen_height = BASE_HEIGHT * SCALE_FACTOR
 
 #Textos
 TEXT_COL =(255,255,255)
-font = pygame.font.SysFont("Arialblack",40)
+font = pygame.font.SysFont("Arialblack", 40)
 
 menu = []
-menu_items ={0:'Items',1:'Training',2:'battle',3:'alarm'}
-menu_objects = ['bp.png','training.png','battle.png','alarm.png']
+menu_items ={0:'Items',1:'Training',2:'battle',3:'alarm',4:'sleep'}
+menu_objects = ['bp.png','training.png','battle.png','alarm.png','sleep.png']
 
-	# Color de fondo personalizado
+# Color de fondo personalizado
 BG_COLOR = (200, 230, 255)  # Color editable RGB
 
 
@@ -54,11 +58,16 @@ if __name__ == "__main__":
 	player = Mon(100,100)
 	moving_sprites.add(player)
 	i = 0
+	j=0
+	k=0
 	for str in menu_objects:
-		menu.append(Menu(str,i))
-		moving_sprites.add(menu[i])
-		i += 1	
-	
+		menu.append(Menu(str,i,j))
+		moving_sprites.add(menu[k])
+		i += 1
+		if i >= 4:
+			j = 1
+			i = 0
+		k += 1
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -84,6 +93,9 @@ if __name__ == "__main__":
 						case 1:
 							print('Boton pulsado en '+ menu_items[i])
 						case 2:
+							# if player.stage == 'Baby II' or player.stage == 'Baby I':
+							# if state in [0,1] or state == None:
+							# 	break
 							print('Boton pulsado en '+ menu_items[i])
 							player.rect.x = 0
 							state = 3

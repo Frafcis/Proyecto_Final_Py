@@ -58,7 +58,7 @@ class Mon(pygame.sprite.Sprite):
 			self.idle_sprites.append(self.current_mon.get_sprite(i*16,0,16,16))
 		return 0
 	
-	def hatch(self,id):
+	def hatch(self):
 		self.idle_sprites = []
 		self.idle_sprites.append(self.current_mon.get_sprite(1*16,0,16,16))
 		self.idle_sprites.append(self.current_mon.get_sprite(2*16,0,16,16))
@@ -87,12 +87,12 @@ class SpriteSheet():
         return sprite
 
 class Menu(pygame.sprite.Sprite):
-	def __init__(self,id,i):
+	def __init__(self,id,i,j):
 		super().__init__()
-		self.materialize(id,i)
+		self.materialize(id,i,j)
 		self.menu_sprites = []
 
-	def materialize(self,id,i):
+	def materialize(self,id,i,j):
 		self.menu_sprites = []
 		self.current_sprite = SpriteSheet(id)
 		self.menu_sprites.append(self.current_sprite.get_sprite(0,0,64,32))
@@ -100,7 +100,7 @@ class Menu(pygame.sprite.Sprite):
 		self.image = self.menu_sprites[self.current_sprite]
 
 		self.rect = self.image.get_rect()
-		self.rect.topleft = [i*64,0]
+		self.rect.topleft = [i*64,j*161]
 
 
 ##Funciones
@@ -114,10 +114,16 @@ def draw_text(text,font,text_col,x,y):
     
 def evolution(player,state):
 	if pygame.time.get_ticks() in range(5000,9000):
-		player.hatch(1)
+		player.hatch()
 		state = 2
 	if pygame.time.get_ticks() in range(9001,9100):
 		player.digitize(1)
+		state = 1
+	if pygame.time.get_ticks() in range(15000,19000):
+		player.hatch()
+		state = 2
+	if pygame.time.get_ticks() in range(19001,20000):
+		player.digitize(2)
 		state = 1
 	return state
 
